@@ -1,18 +1,19 @@
-%**************Dynamic Dataset Generator (DDG) ver. 1.00*******************
-%Author: Danial Yazdani
-%Last Edited: January 17, 2024
+%*****Dynamic Dataset Generator (DDG) MATLAB Implementation ver. 1.00******
+%Author: 
+%Last Edited: January 31, 2024
 %Title: Main function of DDG
 % --------
-%Refrence:
+%Refrence: "Clustering in Dynamic Environments: A Framework for Benchmark 
+%          Dataset Generation With Heterogeneous Changes"
 %
 %
 % --------
 % License:
 % This program is to be used under the terms of the GNU General Public License
 % (http://www.gnu.org/copyleft/gpl.html).
-% Author: Danial Yazdani
-% e-mail: danial DOT yazdani AT gmail DOT com
-% Copyright notice: (c) 2024 Danial Yazdani
+% Author: X Y
+% e-mail: X DOT Y AT gmail DOT com
+% Copyright notice: (c) 2024 X Y
 %**************************************************************************
 % close all;clear all;clc; %#ok<CLALL>
 %% Preparation and initialization

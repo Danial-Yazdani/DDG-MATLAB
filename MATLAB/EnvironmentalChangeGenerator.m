@@ -1,18 +1,21 @@
-%***********************************DDG ver 1.00**************************
-%Author: Danial Yazdani
-%Last Edited: December 14, 2023
-%Title: Environmental change in the dynamic landscape generator
+%*****Dynamic Dataset Generator (DDG) MATLAB Implementation ver. 1.00******
+%Author:
+%Last Edited: January 31, 2024
+%Title: Main function of DDG
 % --------
-%Refrence:
+%Refrence: "Clustering in Dynamic Environments: A Framework for Benchmark
+%          Dataset Generation With Heterogeneous Changes"
 %
-%
+% Description: This function updates the parameters of the Dynamic Gaussian
+% Components (DGCs) to simulate environmental changes within the distributions.
+% The parameter 'ChangeCode' specifies the type of change being simulated.
 % --------
 % License:
 % This program is to be used under the terms of the GNU General Public License
 % (http://www.gnu.org/copyleft/gpl.html).
-% Author: Danial Yazdani
-% e-mail: danial DOT yazdani AT gmail DOT com
-% Copyright notice: (c) 2023 Danial Yazdani
+% Author: X Y
+% e-mail: X DOT Y AT gmail DOT com
+% Copyright notice: (c) 2024 X Y
 %**************************************************************************
 function [DDG] = EnvironmentalChangeGenerator(DDG,ChangeCode)
 %The default dynamic used for generating environmental changes is random.
@@ -237,8 +240,6 @@ elseif ChangeCode==-3 % Change in the number of clusters. Used when the number o
     UpdatedClusterNumber(tmp) = (2*DDG.MinClusterNumber)- UpdatedClusterNumber(tmp);
     DDG.ClusterNumber=UpdatedClusterNumber;
 end
-%% Updating the MaxWeight value
-DDG.MaxWeight         = max(arrayfun(@(x) x.Weight, DDG.RGC));% Value of the largest height
 end
 %% Rotation matrix generator function
 function R = Rotation(teta,Dimension)

@@ -1,18 +1,22 @@
-%***********************************DDG ver 2.00**************************
-%Author: Danial Yazdani
-%Last Edited: December 14, 2023
-%Title:
+%*****Dynamic Dataset Generator (DDG) MATLAB Implementation ver. 1.00******
+%Author:
+%Last Edited: January 31, 2024
+%Title: Clustering solution evaluation function
 % --------
-%Refrence:
+%Refrence: "Clustering in Dynamic Environments: A Framework for Benchmark
+%          Dataset Generation With Heterogeneous Changes"
 %
-%
+% --------
+% Description: This function evaluates a set of clustering solutions, denoted as X.
+% The evaluation is implemented based on a real-valued clustering representation,
+% utilizing the sum of intra-cluster distances as the objective function.
 % --------
 % License:
 % This program is to be used under the terms of the GNU General Public License
 % (http://www.gnu.org/copyleft/gpl.html).
-% Author: Danial Yazdani
-% e-mail: danial DOT yazdani AT gmail DOT com
-% Copyright notice: (c) 2023 Danial Yazdani
+% Author: X Y
+% e-mail: X DOT Y AT gmail DOT com
+% Copyright notice: (c) 2024 X Y
 %**************************************************************************
 function [result,DDG] = ClusteringEvaluation(X,DDG)
 [SolutionNumber,~] = size(X);
@@ -60,10 +64,12 @@ for ii=1 : SolutionNumber
     %% Sampling
     if RecentLargeChangeFlag == 1% Sample all dataset from the updated landscape
         DDG = DataGeneration(DDG.Data.SampleSize,DDG);
-        DDG.CurrentBestSolutionValue = CurrentSolutionEvaluation(DDG.CurrentBestSolution,DDG);%Reevaluate the best clustering solution based on the updated dataset for the performance evaluation
+        DDG.CurrentBestSolutionValue = CurrentSolutionEvaluation(DDG.CurrentBestSolution,DDG);%Reevaluate the best clustering solution based on the updated dataset
+        DDG.FE = DDG.FE+1;
     end
     if mod(DDG.FE, DDG.Data.IncrementalSamplingFrequency) == 0% Incremental sampling based on the fixed frequency DDG.Data.IncrementalSamplingFrequency
         DDG = DataGeneration(DDG.Data.IncrementalSamplingSize,DDG);
-        DDG.CurrentBestSolutionValue = CurrentSolutionEvaluation(DDG.CurrentBestSolution,DDG);%Reevaluate the best clustering solution based on the updated dataset for the performance evaluation
+        DDG.CurrentBestSolutionValue = CurrentSolutionEvaluation(DDG.CurrentBestSolution,DDG);%Reevaluate the best clustering solution based on the updated dataset
+        DDG.FE = DDG.FE+1;
     end
 end

@@ -1,18 +1,24 @@
-%**************Dynamic Dataset Generator (DDG) ver. 1.00*******************
-%Author: Danial Yazdani
-%Last Edited: January 17, 2024
-%Title: Dynamic landsacape generator
+%*****Dynamic Dataset Generator (DDG) MATLAB Implementation ver. 1.00******
+%Author: 
+%Last Edited: January 31, 2024
+%Title: Main function of DDG
 % --------
-%Refrence:
+%Refrence: "Clustering in Dynamic Environments: A Framework for Benchmark 
+%          Dataset Generation With Heterogeneous Changes"
 %
-%
+% --------
+% Description: This function initializes the Dynamic Dataset Generator (DDG), 
+% setting the stage for generating diverse dynamic scenarios. Users can 
+% customize the DDG's behavior by adjusting its parameters directly within 
+% this function. This flexibility allows for the tailored creation of 
+% scenarios to meet specific research needs or objectives.
 % --------
 % License:
 % This program is to be used under the terms of the GNU General Public License
 % (http://www.gnu.org/copyleft/gpl.html).
-% Author: Danial Yazdani
-% e-mail: danial DOT yazdani AT gmail DOT com
-% Copyright notice: (c) 2024 Danial Yazdani
+% Author: X Y
+% e-mail: X DOT Y AT gmail DOT com
+% Copyright notice: (c) 2024 X Y
 %************************************************************************** 
 function [DDG] = DDGinitialization
 DDG          = [];
@@ -37,7 +43,6 @@ for ii=1:DDG.RGCNumber
 end
 DDG.MinCoordinate     = -100;
 DDG.MaxCoordinate     = 100;
-
 %% Defining the heigth values of the DGCs
 DDG.MinWeight = 1;
 DDG.MaxWeight = 2;
@@ -45,7 +50,6 @@ a=[0.5,0.3,0.2];
 for ii=1:DDG.RGCNumber
     DDG.RGC(ii).Weight = a(ii);%DDG.MinWeight + (DDG.MaxWeight-DDG.MinWeight)*rand(DDG.Rng);
 end
-% DDG.MaxWeight         = max(arrayfun(@(x) x.Weight, DDG.RGC));% Value of the largest height
 %% Defining width of DGCs (Configuring condition number)
 DDG.MinSigma = 15;
 DDG.MaxSigma = 25;
