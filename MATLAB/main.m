@@ -1,5 +1,5 @@
 %*****Dynamic Dataset Generator (DDG) MATLAB Implementation ver. 1.00******
-%Author: 
+% Author: X Y
 %Last Edited: January 31, 2024
 %Title: Main function of DDG
 % --------
@@ -12,7 +12,7 @@
 % This program is to be used under the terms of the GNU General Public License
 % (http://www.gnu.org/copyleft/gpl.html).
 % Author: X Y
-% e-mail: X DOT Y AT gmail DOT com
+% e-mail: X DOT Y AT something DOT com
 % Copyright notice: (c) 2024 X Y
 %**************************************************************************
 % close all;clear all;clc; %#ok<CLALL>

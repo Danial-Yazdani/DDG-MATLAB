@@ -1,5 +1,5 @@
 %*****Dynamic Dataset Generator (DDG) MATLAB Implementation ver. 1.00******
-%Author:
+% Author: X Y
 %Last Edited: January 31, 2024
 %Title: Clustering solution evaluation function
 % --------
@@ -15,7 +15,7 @@
 % This program is to be used under the terms of the GNU General Public License
 % (http://www.gnu.org/copyleft/gpl.html).
 % Author: X Y
-% e-mail: X DOT Y AT gmail DOT com
+% e-mail: X DOT Y AT something DOT com
 % Copyright notice: (c) 2024 X Y
 %**************************************************************************
 function [result,DDG] = ClusteringEvaluation(X,DDG)
@@ -39,37 +39,44 @@ for ii=1 : SolutionNumber
     end
     DDG.BestValueAtEachFE(DDG.FE) = DDG.CurrentBestSolutionValue;
     %% changes in the landscape and dataset
-    RecentLargeChangeFlag = 0;
-    for jj=1 : DDG.RGCNumber
-        if rand(DDG.Rng)<DDG.RGC(jj).LocalChangeLikelihood
-            [DDG] = EnvironmentalChangeGenerator(DDG,jj);% local change for DGC jj, the change code is a positive integer
+    if DDG.MovingObjects == 0 % For scenarios that do not simulate moving objects
+        for jj=1 : DDG.DGCNumber
+            if rand(DDG.Rng)<DDG.DGC(jj).LocalChangeLikelihood
+                [DDG] = EnvironmentalChangeGenerator(DDG,jj);% local change for DGC jj, the change code is a positive integer
+            end
         end
-    end
-    if rand(DDG.Rng)<DDG.GlobalChangeLikelihood
-        [DDG] = EnvironmentalChangeGenerator(DDG,0);% 0 is the change code for the global severe changes in DGCs' parameters
-        RecentLargeChangeFlag = 1;
-    end
-    if rand(DDG.Rng)<DDG.RGCNumberChangeLikelihood
-        [DDG] = EnvironmentalChangeGenerator(DDG,-1);% -1 is the change code for change in the number of DGCs
-        RecentLargeChangeFlag = 1;
-    end
-    if rand(DDG.Rng)<DDG.VariableNumberChangeLikelihood
-        [DDG] = EnvironmentalChangeGenerator(DDG,-2);% -2 is the change code for change in the number of variables
-        RecentLargeChangeFlag = 1;
-    end
-    if rand(DDG.Rng)<DDG.ClusterNumberChangeLikelihood
-        [DDG] = EnvironmentalChangeGenerator(DDG,-3);% -3 is the change code for change in the number of cluster centers
-        RecentLargeChangeFlag = 1;
-    end
-    %% Sampling
-    if RecentLargeChangeFlag == 1% Sample all dataset from the updated landscape
-        DDG = DataGeneration(DDG.Data.SampleSize,DDG);
-        DDG.CurrentBestSolutionValue = CurrentSolutionEvaluation(DDG.CurrentBestSolution,DDG);%Reevaluate the best clustering solution based on the updated dataset
-        DDG.FE = DDG.FE+1;
-    end
-    if mod(DDG.FE, DDG.Data.IncrementalSamplingFrequency) == 0% Incremental sampling based on the fixed frequency DDG.Data.IncrementalSamplingFrequency
-        DDG = DataGeneration(DDG.Data.IncrementalSamplingSize,DDG);
-        DDG.CurrentBestSolutionValue = CurrentSolutionEvaluation(DDG.CurrentBestSolution,DDG);%Reevaluate the best clustering solution based on the updated dataset
-        DDG.FE = DDG.FE+1;
+        RecentLargeChangeFlag = 0;
+        if rand(DDG.Rng)<DDG.GlobalChangeLikelihood
+            [DDG] = EnvironmentalChangeGenerator(DDG,0);% 0 is the change code for the global severe changes in DGCs' parameters
+            RecentLargeChangeFlag = 1;
+        end
+        if rand(DDG.Rng)<DDG.DGCNumberChangeLikelihood
+            [DDG] = EnvironmentalChangeGenerator(DDG,-1);% -1 is the change code for change in the number of DGCs
+            RecentLargeChangeFlag = 1;
+        end
+        if rand(DDG.Rng)<DDG.VariableNumberChangeLikelihood
+            [DDG] = EnvironmentalChangeGenerator(DDG,-2);% -2 is the change code for change in the number of variables
+            RecentLargeChangeFlag = 1;
+        end
+        if rand(DDG.Rng)<DDG.ClusterNumberChangeLikelihood
+            [DDG] = EnvironmentalChangeGenerator(DDG,-3);% -3 is the change code for change in the number of cluster centers
+            RecentLargeChangeFlag = 1;
+        end
+        %% Sampling
+        if RecentLargeChangeFlag == 1% Sample all dataset from the updated landscape
+            DDG = DataGeneration(DDG.Data.SampleSize,DDG);
+            DDG.CurrentBestSolutionValue = CurrentSolutionEvaluation(DDG.CurrentBestSolution,DDG);%Reevaluate the best clustering solution based on the updated dataset for performance measurement
+        end
+        if rand(DDG.Rng) < DDG.Data.IncrementalSamplingLikelihood% Incremental sampling based on the fixed frequency DDG.Data.IncrementalSamplingLikelihood
+            DDG = DataGeneration(DDG.Data.IncrementalSamplingSize,DDG);
+            DDG.CurrentBestSolutionValue = CurrentSolutionEvaluation(DDG.CurrentBestSolution,DDG); % Reevaluate the best clustering solution based on the updated dataset for performance measurement
+        end
+    else
+        for jj=1 : DDG.DGCNumber
+            if rand(DDG.Rng)<DDG.DGC(jj).LocalChangeLikelihood
+                [DDG] = EnvironmentalChangeGenerator(DDG,jj);% local change for DGC jj, the change code is a positive integer
+                DDG = MovingObjects(DDG,jj);
+            end
+        end
     end
 end
