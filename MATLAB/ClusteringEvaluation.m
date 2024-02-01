@@ -64,10 +64,10 @@ for ii=1 : SolutionNumber
         end
         %% Sampling
         if RecentLargeChangeFlag == 1% Sample all dataset from the updated landscape
-            DDG = DataGeneration(DDG.Data.SampleSize,DDG);
+            DDG = DataGeneration(DDG.Data.Size,DDG);
             DDG.CurrentBestSolutionValue = CurrentSolutionEvaluation(DDG.CurrentBestSolution,DDG);%Reevaluate the best clustering solution based on the updated dataset for performance measurement
         end
-        if rand(DDG.Rng) < DDG.Data.IncrementalSamplingLikelihood% Incremental sampling based on the fixed frequency DDG.Data.IncrementalSamplingLikelihood
+        if rand(DDG.Rng) < DDG.Data.FrequentSamplingLikelihood% Incremental sampling based on the fixed frequency DDG.Data.FrequentSamplingLikelihood
             DDG = DataGeneration(DDG.Data.IncrementalSamplingSize,DDG);
             DDG.CurrentBestSolutionValue = CurrentSolutionEvaluation(DDG.CurrentBestSolution,DDG); % Reevaluate the best clustering solution based on the updated dataset for performance measurement
         end

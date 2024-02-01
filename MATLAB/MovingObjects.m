@@ -19,6 +19,11 @@
 function [DDG] = MovingObjects(DDG,DGCid)
 for ii=1 : DDG.Data.Size
     if DDG.Data.Origin.DGCid(ii,1) == DGCid
-        DDG.Data.Dataset(ii,:) = ((DDG.Data.Origin.DGCid(ii,:).*DDG.DGC(DGCid).Sigma)*DDG.DGC(DGCid).RotationMatrix)+DDG.DGC(DGCid).Center;
+        if rand(DDG.Rng) > DDG.MovingObjectsResamplingLikelihood
+            DDG.Data.Dataset(ii,:) = ((DDG.Data.Origin.RandomVector(ii,:).*DDG.DGC(DGCid).Sigma)*DDG.DGC(DGCid).RotationMatrix)+DDG.DGC(DGCid).Center;
+        else
+            DDG.Data.Origin.RandomVector(ii,:) = randn(DDG.Rng,1,DDG.NumberOfVariables);
+            DDG.Data.Dataset(ii,:) = ((DDG.Data.Origin.RandomVector(ii,:).*DDG.DGC(DGCid).Sigma)*DDG.DGC(DGCid).RotationMatrix)+DDG.DGC(DGCid).Center;
+        end
     end
 end

@@ -27,19 +27,19 @@ Probability = arrayfun(@(x) x.Weight, DDG.DGC)/sum(arrayfun(@(x) x.Weight, DDG.D
 while counter <NewSampleSize
     ChosenID=randsample(DDG.Rng,DDG.DGCNumber, 1, true, Probability);
     RandomVector = randn(DDG.Rng,1,DDG.NumberOfVariables);
-    Sample = ((RandomVector.*DDG.DGC(ChosenID).Sigma)*DDG.DGC(ChosenID).RotationMatrix)+DDG.DGC(ChosenID).Center;
-    if all(Sample >= DDG.MinCoordinate & Sample <= DDG.MaxCoordinate)
-        counter=counter+1;
-        DataSample(counter,:) = Sample;
-        if DDG.MovingObjects == 1
-            DataOriginRandomVector(counter,:) = RandomVector;
-            DataOriginDGCid(counter,1) = ChosenID;
-        end
+    Sample = ((RandomVector .* DDG.DGC(ChosenID).Sigma) * DDG.DGC(ChosenID).RotationMatrix) + DDG.DGC(ChosenID).Center;
+    %     if all(Sample >= DDG.MinCoordinate & Sample <= DDG.MaxCoordinate) % Activate this IF if you want to keep the data points inside the boundaries of the MEAN positions
+    counter=counter+1;
+    DataSample(counter,:) = Sample;
+    if DDG.MovingObjects == 1
+        DataOriginRandomVector(counter,:) = RandomVector;
+        DataOriginDGCid(counter,1) = ChosenID;
     end
+    %     end
 end
 DDG.Data.Dataset = [DataSample; DDG.Data.Dataset];% Add new samples to the beginning of the dataset
 DDG.Data.Dataset = DDG.Data.Dataset(1:DDG.Data.Size, :);% Remove the last NewSampleSize samples to maintain the dataset size
 if DDG.MovingObjects == 1
-    DDG.Data.Origin.RandomVector  = DataOriginRandomVector;  
+    DDG.Data.Origin.RandomVector  = DataOriginRandomVector;
     DDG.Data.Origin.DGCid         = DataOriginDGCid;
 end

@@ -22,37 +22,37 @@
 %************************************************************************** 
 function [DDG] = DDGinitialization
 DDG          = [];
-DDG.Seed     = 10012; 
+DDG.Seed     = 321; 
 DDG.Rng      = RandStream('mt19937ar', 'Seed', DDG.Seed); % DDG uses random numbers to generate problem instances which affect some problem characteristics. An identical random seed should be used for all runs to generate identical problem instances for each experiment.
-DDG.MaxEvals = 100000; % Maximum function evaluation number
+DDG.MaxEvals = 500000; % Maximum function evaluation number
 %% Number of DGCs, variables, and clusters
 DDG.MinNumberOfVariables = 2;
 DDG.MaxNumberOfVariables = 5;
-DDG.NumberOfVariables    = 2;%randi(DDG.Rng,[DDG.MinNumberOfVariables, DDG.MaxNumberOfVariables]); % Initial number of variables in the dataset
-DDG.MinDGCNumber         = 5; 
+DDG.NumberOfVariables    = 2;% Activate the next line if you want to randomly initialize the number of variables
+%DDG.NumberOfVariables    = randi(DDG.Rng,[DDG.MinNumberOfVariables, DDG.MaxNumberOfVariables]); % Initial number of variables in the dataset
+DDG.MinDGCNumber         = 2; 
 DDG.MaxDGCNumber         = 10; 
-DDG.DGCNumber            = 3;%randi(DDG.Rng,[DDG.MinDGCNumber, DDG.MaxDGCNumber]);% Initial number of DGCs in the landscape
-DDG.MinClusterNumber     = 3; 
-DDG.MaxClusterNumber     = 5; 
-DDG.ClusterNumber        = randi(DDG.Rng,[DDG.MinClusterNumber, DDG.MaxClusterNumber]);% Initial number of clusters.
-%% Initializing the center positions of DGCs
-DDG.MinCoordinate     = -60;
-DDG.MaxCoordinate     = 60;
+DDG.DGCNumber            = 5;% Activate the next line if you want to randomly initialize the number of DGCs
+% DDG.DGCNumber            = randi(DDG.Rng,[DDG.MinDGCNumber, DDG.MaxDGCNumber]);% Initial number of DGCs in the landscape
+DDG.MinClusterNumber     = 2; 
+DDG.MaxClusterNumber     = 10; 
+DDG.ClusterNumber        = 5;% Activate the next line if you want to randomly initialize the number of clusters
+% DDG.ClusterNumber        = randi(DDG.Rng,[DDG.MinClusterNumber, DDG.MaxClusterNumber]);% Initial number of clusters.
+%% Initializing the center positions of DGCs. 
+DDG.MinCoordinate     = -100; % Used for bounding the center (mean) positions of DGCs
+DDG.MaxCoordinate     = 100; % Used for bounding the center (mean) positions of DGCs
 for ii=1:DDG.DGCNumber
     DDG.DGC(ii).Center = DDG.MinCoordinate + (DDG.MaxCoordinate-DDG.MinCoordinate)*rand(DDG.Rng,1,DDG.NumberOfVariables);%Randomly initialize DGCs' center positions inside the boundary
 end
-DDG.MinCoordinate     = -100;
-DDG.MaxCoordinate     = 100;
-%% Defining the heigth values of the DGCs
+%% Defining the weight values of the DGCs
 DDG.MinWeight = 1;
-DDG.MaxWeight = 2;
-a=[0.5,0.3,0.2];
+DDG.MaxWeight = 3;
 for ii=1:DDG.DGCNumber
-    DDG.DGC(ii).Weight = a(ii);%DDG.MinWeight + (DDG.MaxWeight-DDG.MinWeight)*rand(DDG.Rng);
+    DDG.DGC(ii).Weight = DDG.MinWeight + (DDG.MaxWeight-DDG.MinWeight)*rand(DDG.Rng);
 end
-%% Defining width of DGCs (Configuring condition number)
-DDG.MinSigma = 15;
-DDG.MaxSigma = 25;
+%% Defining sigma (standard deviation) of DGCs (Configuring condition number)
+DDG.MinSigma = 7;
+DDG.MaxSigma = 20;
 DDG.Conditioning  = 1;% (0) Condition number is 1 for all DGCs but the sigma values are different from a DGC to another.
                       % (1) Condition number is random for all DGCs.
 switch DDG.Conditioning
@@ -62,13 +62,11 @@ switch DDG.Conditioning
         end
     case 1
         for ii=1:DDG.DGCNumber
-            DDG.DGC(ii).Sigma = [15,10];
-%             DDG.DGC(ii).Sigma = DDG.MinSigma + ((DDG.MaxSigma-DDG.MinSigma)*rand(DDG.Rng,1,DDG.NumberOfVariables));
+            DDG.DGC(ii).Sigma = DDG.MinSigma + ((DDG.MaxSigma-DDG.MinSigma)*rand(DDG.Rng,1,DDG.NumberOfVariables));
         end
     otherwise
         warning('Wrong number is chosen for DDG.Conditioning.')
 end
-
 %% Angles and rotatios
 DDG.MinAngle = -pi;
 DDG.MaxAngle = pi;
@@ -97,12 +95,12 @@ end
 %% Change severity values for Gradual local changes for each DGC
 %For parameters that are not going to be impacted in environmental changes (i.e., remain fixed over time), set the severity range to [0,0].
 DDG.LocalShiftSeverityRange        = [0.1,0.2];
-DDG.LocalSigmaSeverityRange        = [0.1,0.2];
-DDG.LocalWeightSeverityRange       = [0.1,0.2];
-DDG.LocalRotationSeverityRange     = [pi/120,pi/80];
-DDG.LocalTemporalSeverityRange     = [0.1,0.2];
-DDG.RelocationCorrelationRange     = [0.90,0.95];
+DDG.RelocationCorrelationRange     = [0.99,0.995];
+DDG.LocalSigmaSeverityRange        = [0.05,0.1];
+DDG.LocalWeightSeverityRange       = [0.02,0.05];
+DDG.LocalRotationSeverityRange     = [pi/360,pi/180];
 DDG.DirectionChangeProbabolityRange= [0.02,0.05];
+DDG.LocalTemporalSeverityRange     = [0.05,0.1];
 for ii=1 : DDG.DGCNumber
     DDG.DGC(ii).ShiftSeverity          = DDG.LocalShiftSeverityRange(1)+((DDG.LocalShiftSeverityRange(2)-DDG.LocalShiftSeverityRange(1))* rand(DDG.Rng));%Local shift Severity for relocating the center position of DGC ii
     DDG.DGC(ii).ShiftCorrelationFactor = DDG.RelocationCorrelationRange(1)+((DDG.RelocationCorrelationRange(2)-DDG.RelocationCorrelationRange(1))* rand(DDG.Rng));%Correlation factor for relocating the center position of DGC ii
@@ -131,24 +129,25 @@ DDG.GlobalSigmaSeverityValue  = 5;
 DDG.GlobalWeightSeverityValue = 0.5;
 DDG.GlobalAngleSeverityValue  = pi/4;
 DDG.GlobalSeverityControl     = 0.1;% The values of alpha and beta in Beta-distribution used in global changes. The values must be 0<alpha=beta<=1, and smaller values result in more heavy-tail distributions.
-DDG.GlobalChangeLikelihood    = 1/10000;
+DDG.GlobalChangeLikelihood    = 0;
 %% Parameters for changing the numbers of variables, DGCs, and cluster centers
-DDG.DGCNumberChangeSeverity       = 1;
+DDG.DGCNumberChangeSeverity        = 1;
 DDG.VariableNumberChangeSeverity   = 1;
 DDG.ClusterNumberChangeSeverity    = 1;
-DDG.DGCNumberChangeLikelihood     = 1/10000;
-DDG.VariableNumberChangeLikelihood = 1/10000;
-DDG.ClusterNumberChangeLikelihood  = 1/10000;
+DDG.DGCNumberChangeLikelihood      = 0;
+DDG.VariableNumberChangeLikelihood = 0;
+DDG.ClusterNumberChangeLikelihood  = 0;
 %% Parameters used for storing the results
 DDG.BestValueAtEachFE        = inf(1,DDG.MaxEvals);
 DDG.FE                       = 0;
 DDG.CurrentBestSolution      = [];
 DDG.CurrentBestSolutionValue = inf; % Set it to inf for minimization problems and -inf for maximization
 %% Defining dataset and sampling parameters
-DDG.MovingObjects                     = 1;% Set to 1 to simulate moving objects, 0 otherwise.
-DDG.Data.Size                   = 1000;
-DDG.Data.IncrementalSamplingLikelihood = 0.1;% The frequency of Incremental Sampling is fixed
-DDG.Data.IncrementalSamplingSize      = ceil(DDG.Data.Size*0.05);% Define the percentage of dataset to be replaced by new samples
+DDG.MovingObjects  = 1;% Set to 1 to simulate moving objects, 0 otherwise. By simulating moving objects only correlation-based changes happen over time and other changes are deactivated.
+DDG.MovingObjectsResamplingLikelihood  = 0.02;% Likelihood of a data point to be resampled in simulating moving objects
+DDG.Data.Size      = 500;
+DDG.Data.FrequentSamplingLikelihood = 0.1;% The likelihood of Incremental Sampling or updatingthe dataset in moving objects simulation
+DDG.Data.IncrementalSamplingSize = ceil(DDG.Data.Size*0.05);% Define the percentage of dataset to be replaced by new samples
 DDG.Data.Dataset = NaN(DDG.Data.Size,DDG.NumberOfVariables);
 if DDG.MovingObjects == 1
     DDG.Data.Origin.RandomVector = NaN(DDG.Data.Size,DDG.NumberOfVariables);% Used for simulating moving objects. For each object, it includes a d-dimensional vector of random variables generated by N(0,1).
