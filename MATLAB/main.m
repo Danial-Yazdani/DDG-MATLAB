@@ -8,6 +8,7 @@
 %            Danial Yazdani et al., 2024. 
 %            Available at https://arxiv.org/abs/2402.15731v2
 %
+% --------
 % Description:
 % This MATLAB script implements the Dynamic Dataset Generator (DDG), which
 % simulates a wide range of dynamic clustering scenarios. DDG allows for the

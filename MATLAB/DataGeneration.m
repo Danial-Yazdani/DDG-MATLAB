@@ -1,20 +1,23 @@
 %*****Dynamic Dataset Generator (DDG) MATLAB Implementation ver. 1.00******
-% Author: X Y
-%Last Edited: January 31, 2024
-%Title: Main function of DDG
+% Author: Danial Yazdani
+% Last Edited: January 31, 2024
+% Title: Main function of DDG
 % --------
-%Refrence: "Clustering in Dynamic Environments: A Framework for Benchmark
-%          Dataset Generation With Heterogeneous Changes"
+% Reference: "Clustering in Dynamic Environments: A Framework for Benchmark
+%            Dataset Generation With Heterogeneous Changes"
+%            Danial Yazdani et al., 2024. 
+%            Available at https://arxiv.org/abs/2402.15731v2
 %
 % --------
 % Description: This function Generates data and updates the dataset.
+%
 % --------
 % License:
 % This program is to be used under the terms of the GNU General Public License
 % (http://www.gnu.org/copyleft/gpl.html).
-% Author: X Y
-% e-mail: X DOT Y AT something DOT com
-% Copyright notice: (c) 2024 X Y
+% Author: Danial Yazdani
+% e-mail: danial.yazdani@gmail.com
+% Copyright notice: (c) 2024 Danial Yazdani
 %**************************************************************************
 function [DDG] = DataGeneration(NewSampleSize,DDG)
 DataSample = NaN(NewSampleSize,DDG.NumberOfVariables);
