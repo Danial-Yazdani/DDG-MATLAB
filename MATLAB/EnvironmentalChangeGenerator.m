@@ -1,6 +1,6 @@
 %*****Dynamic Dataset Generator (DDG) MATLAB Implementation ver. 1.00******
 % Author: Danial Yazdani
-% Last Edited: January 31, 2024
+% Last Edited: November 28, 2025
 % Title: Main function of DDG
 % --------
 % Reference: "Clustering in Dynamic Environments: A Framework for Benchmark
@@ -201,7 +201,7 @@ elseif ChangeCode==-2
             DDG.DGC(ii).SigmaDirection(VariablesToBeRemoved)=[];
             DDG.DGC(ii).RotationDirection(VariablesToBeRemoved, :) = [];
             DDG.DGC(ii).RotationDirection(:,VariablesToBeRemoved) = [];
-            [DDG.DGC(ii).RotationMatrix] = Rotation(DDG.DGC(ii).ThetaMatrix,DDG.NumberOfVariables);
+            [DDG.DGC(ii).RotationMatrix] = Rotation(DDG.DGC(ii).ThetaMatrix,UpdatedVariableNumber);
         end
     elseif UpdatedVariableNumber>DDG.NumberOfVariables
         VariablesToBeAdded = sort(randperm(DDG.Rng,UpdatedVariableNumber,abs(DDG.NumberOfVariables-UpdatedVariableNumber)));
@@ -234,7 +234,7 @@ elseif ChangeCode==-2
                         DDG.DGC(ii).RotationDirection = triu(DDG.DGC(ii).RotationDirection,1);
                 end
             end
-            [DDG.DGC(ii).RotationMatrix] = Rotation(DDG.DGC(ii).ThetaMatrix,DDG.NumberOfVariables);
+            [DDG.DGC(ii).RotationMatrix] = Rotation(DDG.DGC(ii).ThetaMatrix,UpdatedVariableNumber);
         end
     end
     DDG.NumberOfVariables = UpdatedVariableNumber;

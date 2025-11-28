@@ -1,6 +1,6 @@
 %*****Dynamic Dataset Generator (DDG) MATLAB Implementation ver. 1.00******
 % Author: Danial Yazdani
-% Last Edited: January 31, 2024
+% Last Edited: November 28, 2025
 % Title: Main function of DDG
 % --------
 % Reference: "Clustering in Dynamic Environments: A Framework for Benchmark

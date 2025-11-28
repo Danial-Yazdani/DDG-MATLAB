@@ -1,6 +1,6 @@
 %*****Dynamic Dataset Generator (DDG) MATLAB Implementation ver. 1.00******
 % Author: Danial Yazdani
-% Last Edited: January 31, 2024
+% Last Edited: November 28, 2025
 % Title: Main function of DDG
 % --------
 % Reference: "Clustering in Dynamic Environments: A Framework for Benchmark
@@ -31,9 +31,8 @@ for ii=1 : SolutionNumber
     x = X(ii,:);
     ClusterCenterPosition = reshape(x', [DDG.NumberOfVariables, DDG.ClusterNumber])';
     Distances = pdist2(DDG.Data.Dataset, ClusterCenterPosition,'euclidean');
-    [~, closestClusterIndices] = min(Distances, [], 2);
-    selectedDistances = diag(Distances(:, closestClusterIndices));
-    result(ii) = sum(selectedDistances);% Sum of intra-cluster distances
+    [minDistances, ~] = min(Distances, [], 2);
+    result(ii) = sum(minDistances);% Sum of intra-cluster distances
     DDG.FE = DDG.FE+1;
     %% For performance measurement
     if result(ii)<DDG.CurrentBestSolutionValue %for minimization

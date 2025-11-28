@@ -1,6 +1,6 @@
 %*****Dynamic Dataset Generator (DDG) MATLAB Implementation ver. 1.00******
 % Author: Danial Yazdani
-% Last Edited: January 31, 2024
+% Last Edited: November 28, 2025
 % Title: Main function of DDG
 % --------
 % Reference: "Clustering in Dynamic Environments: A Framework for Benchmark
@@ -20,18 +20,29 @@
 % Copyright notice: (c) 2024 Danial Yazdani
 %**************************************************************************
 function [DDG] = DataGeneration(NewSampleSize,DDG)
-DataSample = NaN(NewSampleSize,DDG.NumberOfVariables);
-counter = 0;
-Probability = arrayfun(@(x) x.Weight, DDG.DGC)/sum(arrayfun(@(x) x.Weight, DDG.DGC));%Defining the probability of choosing each DGC for generating a data point based on their weight values.
-while counter <NewSampleSize
-    ChosenID=randsample(DDG.Rng,DDG.DGCNumber, 1, true, Probability);
-    RandomVector = randn(DDG.Rng,1,DDG.NumberOfVariables);
-    Sample = ((RandomVector .* DDG.DGC(ChosenID).Sigma) * DDG.DGC(ChosenID).RotationMatrix) + DDG.DGC(ChosenID).Center;
-    %     if all(Sample >= DDG.MinCoordinate & Sample <= DDG.MaxCoordinate) % Activate this IF if you want to keep the data points inside the boundaries of the MEAN positions
-    counter=counter+1;
-    DataSample(counter,:) = Sample;
-    %     end
+% Extract weights into array (faster than arrayfun)
+Weights = [DDG.DGC.Weight];
+Probability = Weights / sum(Weights); % Normalized probabilities for DGC selection
+
+% Batch select which DGC generates each sample
+ChosenIDs = randsample(DDG.Rng, DDG.DGCNumber, NewSampleSize, true, Probability);
+
+% Pre-allocate output
+DataSample = zeros(NewSampleSize, DDG.NumberOfVariables);
+
+% Generate all random vectors at once
+RandomVectors = randn(DDG.Rng, NewSampleSize, DDG.NumberOfVariables);
+
+% Process each DGC's samples in batch (vectorized)
+for dgcId = 1:DDG.DGCNumber
+    mask = (ChosenIDs == dgcId);
+    nSamples = sum(mask);
+    if nSamples > 0
+        % Batch generate all samples for this DGC
+        DataSample(mask, :) = (RandomVectors(mask, :) .* DDG.DGC(dgcId).Sigma) * DDG.DGC(dgcId).RotationMatrix + DDG.DGC(dgcId).Center;
+    end
 end
-DDG.Data.Dataset = [DataSample; DDG.Data.Dataset];% Add new samples to the beginning of the dataset
-DDG.Data.Dataset = DDG.Data.Dataset(1:DDG.Data.Size, :);% Remove the last NewSampleSize samples to maintain the dataset size
+
+% Update dataset using FIFO approach
+DDG.Data.Dataset = [DataSample; DDG.Data.Dataset(1:end-NewSampleSize, :)];
 end
